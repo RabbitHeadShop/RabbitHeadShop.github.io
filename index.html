@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TXZX351KJ2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Google Analytics Script -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXZX351KJ2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TXZX351KJ2', { 'send_page_view': true });
+    </script>
 
-  gtag('config', 'G-TXZX351KJ2');
-</script>
+    <!-- Meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Rabbit Head Shop!</title>
+
+    <!-- Styles -->
     <style>
         body {
             font-family: 'Garamond', serif;
@@ -79,10 +82,10 @@
 </head>
 <body>
     <main>
-        <h1>Welcome to Rabbit Head Shop!</h1>
-        <p>Hello and welcome to my first public web page. It's still a work in progress, but I'm excited to set up shop!</p>
+        <h1>Welcome to the Rabbit Head Shop!</h1>
+        <p>Hello and welcome to my first public web page! It's still a work in progress, but I'm excited to set up shop.</p>
         <p>I'll be focusing mainly on mushroom cultivation and accessories, and I aim to have something up for you as soon as I can.</p>
-        <p>For now, if you're interested you can check out my new multiplayer pong game here: <a href="https://www.rabbithead.shop/RetroPong" target="_blank" class="email-link">RetroPong</a></p>
+        <p>For now, if you're interested you can check out my new multiplayer pong game here: <a href="https://www.rabbithead.shop/RetroPong" target="_blank" class="email-link" id="retroPongLink">RetroPong</a></p>
         <p>Want to let me know what you think? Email me at <a href="mailto:shoprabbithead@gmail.com" class="email-link">shoprabbithead@gmail.com</a></p>
     </main>
 </body>
