@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google Tag Manager -->
+  <!-- Google Tag Manager -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXZX351KJ2"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
@@ -12,88 +12,78 @@
 </script>
 <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Retro Multiplayer Pong</title>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falling Square Game</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             background-color: #000;
             margin: 0;
-            overflow: hidden;
-            font-family: 'Press Start 2P', cursive;
-        }
-        #gameContainer {
-            position: absolute;
-            top: 0;
-            left: 0;
+            padding: 0;
             width: 100%;
             height: 100%;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            color: purple;
+            font-family: Arial, sans-serif;
         }
-        #gameCanvas {
-            background-color: #000;
-            border: 4px solid #00FF00;
-            touch-action: none;
-        }
-        .score-left, .score-right {
-            position: absolute;
-            color: rgba(0, 255, 0, 0.5);
-            font-size: 24px;
-            font-family: 'Press Start 2P', cursive;
-            text-shadow: 2px 2px 2px #000;
-            pointer-events: none;
-        }
-        .score-left {
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .score-right {
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .start-button, .fullscreen-button {
-            position: absolute;
-            background-color: #00FF00;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            font-size: 20px;
-            cursor: pointer;
-            font-family: 'Press Start 2P', cursive;
-            display: block;
-        }
-        .start-button {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .fullscreen-button {
-            top: 60%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 16px;
-            padding: 8px 16px;
-            display: block;
-        }
-        .countdown {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #00FF00;
-            font-size: 48px;
-            font-family: 'Press Start 2P', cursive;
-            text-shadow: 2px 2px 2px #000;
+        canvas {
             display: none;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center vertically */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin-bottom: 20px;
+        }
+        .button-container button {
+            width: 200px;
+            background-color: red;
+            border: groove;
+          border-color: purple;
+          border-width: 5px;
+            color: purple;
+            padding: 15px 32px;
+          font-family: Arial, sans-serif;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .start-button, .game-over-buttons button {
+            background-color: #4CAF50;
+        }
+        .game-over-buttons {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .game-over-buttons p {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .game-over-buttons .score {
+            font-size: 18px;
+        }
+        .game-over-buttons button {
+            background-color: #f44336;
+            margin: 10px auto;
+        }
+        .difficulty-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 <!-- Measurement ID -->
@@ -103,224 +93,258 @@
     <!-- End Measurement ID -->
 </head>
 <body>
-    <div id="gameContainer">
-        <canvas id="gameCanvas" width="400" height="600"></canvas>
-        <div class="score-left" id="scoreLeft">0</div>
-        <div class="score-right" id="scoreRight">0</div>
-        <button class="start-button" onclick="startGame()">Start</button>
-        <button class="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
-        <div class="countdown" id="countdown"></div>
+    <div class="button-container">
+        <div class="difficulty-buttons">
+            <button onclick="setDifficulty('very_easy')">Very Easy</button>
+            <button onclick="setDifficulty('easy')">Easy</button>
+            <button onclick="setDifficulty('medium')">Medium</button>
+            <button onclick="setDifficulty('hard')">Hard</button>
+        </div>
+        <button class="start-button" id="startButton" style="display: none;" onclick="startGame()">Start Game</button>
     </div>
+
+    <canvas id="gameCanvas"></canvas>
+    <div id="gameOverScreen" class="game-over-buttons">
+        <p id="gameOverText">Game Over</p>
+        <p class="score" id="scoreText"></p>
+        <p class="high-score" id="highScoreText"></p>
+        <button onclick="restartGame()">Restart</button>
+        <button onclick="backToDifficulty()">Home</button>
+    </div>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+        const context = canvas.getContext('2d');
 
-        const paddleWidth = 100;
-        const paddleHeight = 10;
-        const paddleSpeed = 8;
-        const ballSize = 10;
-        let ballSpeed = 2;
-
-        let topPaddleX = canvas.width / 2 - paddleWidth / 2;
-        let bottomPaddleX = canvas.width / 2 - paddleWidth / 2;
-
-        let ballX = canvas.width / 2;
-        let ballY = canvas.height / 2;
-        let ballSpeedX = ballSpeed;
-        let ballSpeedY = ballSpeed;
-
-        let scoreLeft = 0;
-        let scoreRight = 0;
-
+        let square = { x: 0, y: 0, size: 50 };
+        let obstacles = [];
+        const obstacleHeight = 50;
+        let touchX = null; // Only X-axis touch input, null initially
+        let obstacleSpeed = 4;
+        let gameOver = false;
         let gameStarted = false;
+        let obstacleDistance; // Distance between obstacles in pixels
+        let score = 0; // Initialize score variable
+        let highScores = {
+            very_easy: 0,
+            easy: 0,
+            medium: 0,
+            hard: 0
+        };
 
-        // Touch control variables
-        let touches = {};
+        // Load high scores from localStorage if available
+        if (localStorage.getItem('highScores')) {
+            highScores = JSON.parse(localStorage.getItem('highScores'));
+        }
 
-        canvas.addEventListener('touchstart', (e) => {
-            for (let touch of e.touches) {
-                touches[touch.identifier] = {
-                    x: touch.clientX - canvas.offsetLeft,
-                    y: touch.clientY - canvas.offsetTop
-                };
-            }
-        });
+        // Image for square
+        const squareImage = new Image();
+        squareImage.src = 'https://static.wikia.nocookie.net/tinytower/images/8/86/Parachute.png/revision/latest/scale-to-width-down/250?cb=20210624200514';
 
-        canvas.addEventListener('touchmove', (e) => {
-            for (let touch of e.touches) {
-                touches[touch.identifier] = {
-                    x: touch.clientX - canvas.offsetLeft,
-                    y: touch.clientY - canvas.offsetTop
-                };
-            }
-        });
+        // Image for obstacle
+        const obstacleImage = new Image();
+        obstacleImage.src = 'https://cdn.vectorstock.com/i/preview-1x/53/77/pixel-art-seamless-pattern-brick-texture-vector-30705377.jpg';
 
-        canvas.addEventListener('touchend', (e) => {
-            for (let touch of e.changedTouches) {
-                delete touches[touch.identifier];
-            }
-        });
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-        function movePaddles() {
-            let topTouchX = null;
-            let bottomTouchX = null;
+            // Center the square in the viewport
+            square.x = canvas.width / 2 - square.size / 2;
+            square.y = canvas.height / 2 - square.size / 2;
 
-            for (let touch of Object.values(touches)) {
-                if (touch.y < canvas.height / 2) {
-                    topTouchX = touch.x;
-                } else {
-                    bottomTouchX = touch.x;
-                }
-            }
-
-            if (topTouchX !== null) {
-                topPaddleX = Math.max(0, Math.min(canvas.width - paddleWidth, topTouchX - paddleWidth / 2));
-            }
-            if (bottomTouchX !== null) {
-                bottomPaddleX = Math.max(0, Math.min(canvas.width - paddleWidth, bottomTouchX - paddleWidth / 2));
-            }
+            draw();
         }
 
         function draw() {
-            // Clear the canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            context.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw paddles
-            ctx.fillStyle = '#00FF00';
-            ctx.fillRect(topPaddleX, 0, paddleWidth, paddleHeight);
-            ctx.fillRect(bottomPaddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+            // Draw the animated GIF instead of a filled rectangle
+            context.drawImage(squareImage, square.x, square.y, square.size, square.size);
 
-            // Draw the ball
-            ctx.beginPath();
-            ctx.arc(ballX, ballY, ballSize, 0, Math.PI * 2);
-            ctx.fill();
+            // Draw obstacles with image
+            obstacles.forEach(obstacle => {
+                context.drawImage(obstacleImage, 0, obstacle.y, obstacle.holeX, obstacle.height);
+                context.drawImage(obstacleImage, obstacle.holeX + obstacle.holeWidth, obstacle.y, canvas.width - (obstacle.holeX + obstacle.holeWidth), obstacle.height);
+            });
 
-            // Draw the middle line (net)
-            ctx.fillStyle = '#00FF00';
-            ctx.fillRect(0, canvas.height / 2 - 2, canvas.width, 4);
+            if (gameOver) {
+                // Display score and high score on game over
+                context.fillStyle = 'white';
+                context.font = '20px Arial';
+                context.fillText(`Score: ${score}`, 10, 30);
+                const currentDifficulty = getCurrentDifficulty();
+                context.fillText(`High Score (${currentDifficulty}): ${highScores[currentDifficulty]}`, 10, 60);
+            }
+        }
 
-            // Move the ball if game has started
+        function update() {
             if (gameStarted) {
-                ballX += ballSpeedX;
-                ballY += ballSpeedY;
+                if (touchX !== null) {
+                    // Move square based on touch (only X-axis)
+                    square.x = touchX - square.size / 2;
 
-                // Ball collision with side walls
-                if (ballX - ballSize <= 0 || ballX + ballSize >= canvas.width) {
-                    ballSpeedX = -ballSpeedX;
+                    // Ensure square stays within bounds of canvas horizontally
+                    square.x = Math.max(0, Math.min(canvas.width - square.size, square.x));
+                } else {
+                    // Keep square centered horizontally
+                    square.x = canvas.width / 2 - square.size / 2;
                 }
 
-                // Ball collision with paddles
-                if (ballY - ballSize <= paddleHeight && ballX >= topPaddleX && ballX <= topPaddleX + paddleWidth) {
-                    ballSpeedY = -ballSpeedY;
-                    increaseBallSpeed();
-                }
-                if (ballY + ballSize >= canvas.height - paddleHeight && ballX >= bottomPaddleX && ballX <= bottomPaddleX + paddleWidth) {
-                    ballSpeedY = -ballSpeedY;
-                    increaseBallSpeed();
-                }
+                // Update obstacle positions
+                obstacles.forEach(obstacle => {
+                    obstacle.y -= obstacleSpeed;
 
-                // Ball out of bounds (score point and reset)
-                if (ballY - ballSize <= 0) {
-                    // Player 1 scores
-                    scoreRight++;
-                    document.getElementById('scoreRight').textContent = scoreRight;
-                    resetBall();
-                } else if (ballY + ballSize >= canvas.height) {
-                    // Player 2 scores
-                    scoreLeft++;
-                    document.getElementById('scoreLeft').textContent = scoreLeft;
-                    resetBall();
+                    // Check if obstacle has passed the square
+                    if (obstacle.y + obstacle.height < square.y && !obstacle.passed) {
+                        obstacle.passed = true;
+                        score++; // Increment score
+
+                        // Update high score if current score is higher
+                        const currentDifficulty = getCurrentDifficulty();
+                        if (score > highScores[currentDifficulty]) {
+                            highScores[currentDifficulty] = score;
+                            localStorage.setItem('highScores', JSON.stringify(highScores));
+                        }
+                    }
+                });
+
+                // Remove obstacles that are off-screen
+                obstacles = obstacles.filter(obstacle => obstacle.y + obstacle.height > 0);
+
+                // Check for collisions
+                obstacles.forEach(obstacle => {
+                    if (
+                        (square.x < obstacle.holeX &&
+                            square.x + square.size > 0 &&
+                            square.y < obstacle.y + obstacle.height &&
+                            square.y + square.size > obstacle.y) ||
+                        (square.x < canvas.width &&
+                            square.x + square.size > obstacle.holeX + obstacle.holeWidth &&
+                            square.y < obstacle.y + obstacle.height &&
+                            square.y + square.size > obstacle.y)
+                    ) {
+                        // Collision detected, stop the game
+                        gameOver = true;
+                    }
+                });
+
+                // Create new obstacles based on distance
+                if (obstacles.length === 0 || obstacles[obstacles.length - 1].y <= canvas.height - obstacleDistance) {
+                    obstacles.push(createObstacle());
                 }
             }
 
-            // Move paddles based on touch input
-            movePaddles();
-
-            // Request animation frame
-            requestAnimationFrame(draw);
+            if (gameOver) {
+                stopGame();
+            } else {
+                draw();
+                requestAnimationFrame(update);
+            }
         }
 
-        function resetBall() {
-            ballX = canvas.width / 2;
-            ballY = canvas.height / 2;
-            ballSpeedX = ballSpeed; // Start ball in opposite direction
-            ballSpeedY = ballSpeed;
+        function stopGame() {
+            canvas.style.display = 'none'; // Hide the canvas
+            document.getElementById('gameOverScreen').style.display = 'block';
+            document.getElementById('scoreText').textContent = `Score: ${score}`; // Display score
+            const currentDifficulty = getCurrentDifficulty();
+            document.getElementById('highScoreText').textContent = `High Score (${currentDifficulty}): ${highScores[currentDifficulty]}`; // Display high score
+            score = 0; // Reset score
+        }
+
+        function restartGame() {
+            gameOver = false;
+            canvas.style.display = 'none'; // Hide the canvas
+            document.getElementById('gameOverScreen').style.display = 'none';
+            resetGame();
+            score = 0; // Reset score
+            startGame(); // Restart the game
+        }
+
+        function backToDifficulty() {
+            gameOver = false;
+            canvas.style.display = 'none'; // Hide the canvas
+            document.getElementById('gameOverScreen').style.display = 'none';
+            document.querySelector('.difficulty-buttons').style.display = 'flex'; // Show difficulty buttons
+            document.querySelector('.start-button').style.display = 'none'; // Hide start button
+        }
+
+        function setDifficulty(difficulty) {
+            switch (difficulty) {
+                case 'very_easy':
+                    obstacleSpeed = 4;
+                    obstacleDistance = 400; // Pixels between obstacles
+                    break;
+                case 'easy':
+                    obstacleSpeed = 5;
+                    obstacleDistance = 350;
+                    break;
+                case 'medium':
+                    obstacleSpeed = 6;
+                    obstacleDistance = 300;
+                    break;
+                case 'hard':
+                    obstacleSpeed = 7;
+                    obstacleDistance = 250;
+                    break;
+                default:
+                    obstacleSpeed = 4;
+                    obstacleDistance = 300;
+            }
+            document.querySelector('.difficulty-buttons').style.display = 'none'; // Hide difficulty buttons
+            document.querySelector('.start-button').style.display = 'block'; // Show start button
+        }
+
+        function getCurrentDifficulty() {
+            if (obstacleSpeed === 2) return 'very_easy';
+            if (obstacleSpeed === 3) return 'easy';
+            if (obstacleSpeed === 4) return 'medium';
+            if (obstacleSpeed === 5) return 'hard';
+            return 'medium';
+        }
+
+        function createObstacle() {
+            const holeWidth = 150; // Width of the hole in the obstacle
+            const holeX = Math.floor(Math.random() * (canvas.width - holeWidth));
+            return { y: canvas.height, height: obstacleHeight, holeX, holeWidth, passed: false };
+        }
+
+        function resetGame() {
+            obstacles = [];
+            score = 0;
+            gameOver = false;
             gameStarted = false;
-            document.querySelector('.start-button').style.display = 'block';
-            document.querySelector('.fullscreen-button').style.display = 'block';
-            document.querySelector('.fullscreen-button').textContent = 'Fullscreen';
         }
 
         function startGame() {
-            ballSpeed = 2;
-            ballSpeedX = ballSpeed;
-            ballSpeedY = ballSpeed;
-            document.querySelector('.start-button').style.display = 'none';
-            document.querySelector('.fullscreen-button').style.display = 'none';
-
-            let countdown = 3;
-            const countdownElement = document.getElementById('countdown');
-            countdownElement.style.display = 'block';
-            countdownElement.textContent = countdown;
-
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                countdownElement.textContent = countdown;
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    countdownElement.style.display = 'none';
-                    gameStarted = true;
-                }
-            }, 1000);
+            resetGame();
+            canvas.style.display = 'block';
+            document.getElementById('startButton').style.display = 'none';
+            gameStarted = true;
+            resizeCanvas();
+            requestAnimationFrame(update);
         }
 
-        function increaseBallSpeed() {
-            // Increase ball speed slightly, but only up to the 4th hit
-            if (ballSpeedX > 0 && ballSpeedX <= 4.5) {
-                ballSpeedX += 0.5;
-            } else if (ballSpeedX < 0 && ballSpeedX >= -4.5) {
-                ballSpeedX -= 0.5;
-            }
-            if (ballSpeedY > 0 && ballSpeedY <= 4.5) {
-                ballSpeedY += 0.5;
-            } else if (ballSpeedY < 0 && ballSpeedY >= -4.5) {
-                ballSpeedY -= 0.5;
-            }
-        }
+        window.addEventListener('resize', resizeCanvas);
 
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-                document.querySelector('.fullscreen-button').textContent = 'Exit Fullscreen';
-                document.querySelector('.fullscreen-button').style.display = 'none';
-            } else {
-                document.exitFullscreen();
-                document.querySelector('.fullscreen-button').textContent = 'Fullscreen';
-                document.querySelector('.fullscreen-button').style.display = 'block';
-            }
-        }
-
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                document.querySelector('.fullscreen-button').textContent = 'Exit Fullscreen';
-                document.querySelector('.fullscreen-button').style.display = 'none';
-            } else {
-                document.querySelector('.fullscreen-button').textContent = 'Fullscreen';
-                document.querySelector('.fullscreen-button').style.display = 'block';
+        canvas.addEventListener('touchstart', function (event) {
+            if (event.touches.length === 1) {
+                touchX = event.touches[0].clientX;
             }
         });
 
-        // Check if the game is running as a web app
-        if (window.navigator.standalone === true) {
-            // Add event listener for touch start to automatically request fullscreen
-            document.addEventListener('touchstart', function() {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                }
-            }, { once: true });
-        }
+        canvas.addEventListener('touchmove', function (event) {
+            if (event.touches.length === 1) {
+                touchX = event.touches[0].clientX;
+            }
+        });
 
-        // Start the game loop
+        canvas.addEventListener('touchend', function () {
+            touchX = null; // Reset touch input when touch ends
+        });
+
+        // Initial setup
+        resizeCanvas();
         draw();
     </script>
 </body>
