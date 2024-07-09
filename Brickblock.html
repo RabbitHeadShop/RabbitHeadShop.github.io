@@ -13,7 +13,7 @@
 <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrickBlock</title>
+    <title>Falling Square Game</title>
     <style>
         body, html {
             background-color: #000;
@@ -307,20 +307,20 @@ obstacleImage.height = 300;
         function setDifficulty(difficulty) {
             switch (difficulty) {
                 case 'very_easy':
-                    obstacleSpeed = 4;
-                    obstacleDistance = 400; // Pixels between obstacles
+                    obstacleSpeed = 2;
+                    obstacleDistance = 300; // Pixels between obstacles
                     break;
                 case 'easy':
-                    obstacleSpeed = 5;
+                    obstacleSpeed = 3;
                     obstacleDistance = 350;
                     break;
                 case 'medium':
-                    obstacleSpeed = 6;
+                    obstacleSpeed = 4;
                     obstacleDistance = 300;
                     break;
                 case 'hard':
-                    obstacleSpeed = 7;
-                    obstacleDistance = 250;
+                    obstacleSpeed = 5;
+                    obstacleDistance = 300;
                     break;
                 default:
                     obstacleSpeed = 4;
@@ -331,10 +331,10 @@ obstacleImage.height = 300;
         }
 
         function getCurrentDifficulty() {
-            if (obstacleSpeed === 4) return 'very_easy';
-            if (obstacleSpeed === 5) return 'easy';
-            if (obstacleSpeed === 6) return 'medium';
-            if (obstacleSpeed === 7) return 'hard';
+            if (obstacleSpeed === 2) return 'very_easy';
+            if (obstacleSpeed === 3) return 'easy';
+            if (obstacleSpeed === 4) return 'medium';
+            if (obstacleSpeed === 5) return 'hard';
             return 'medium';
         }
 
