@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google Tag Manager -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TXZX351KJ2"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-TXZX351KJ2');
-</script>
-<!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Falling Square Game</title>
@@ -46,11 +36,11 @@
             width: 200px;
             background-color: red;
             border: groove;
-          border-color: purple;
-          border-width: 5px;
+            border-color: purple;
+            border-width: 5px;
             color: purple;
             padding: 15px 32px;
-          font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif;
             text-align: center;
             text-decoration: none;
             font-size: 16px;
@@ -86,11 +76,6 @@
             justify-content: center;
         }
     </style>
-<!-- Measurement ID -->
-    <script>
-        gtag('config', 'G-TXZX351KJ2', { 'send_page_view': true });
-    </script>
-    <!-- End Measurement ID -->
 </head>
 <body>
     <div class="button-container">
@@ -179,69 +164,66 @@
         }
 
         function update() {
-            if (gameStarted) {
-                if (touchX !== null) {
-                    // Move square based on touch (only X-axis)
-                    square.x = touchX - square.size / 2;
+    if (gameStarted) {
+        if (touchX !== null) {
+            // Move square based on touch (only X-axis)
+            square.x = touchX - square.size / 2;
 
-                    // Ensure square stays within bounds of canvas horizontally
-                    square.x = Math.max(0, Math.min(canvas.width - square.size, square.x));
-                } else {
-                    // Keep square centered horizontally
-                    square.x = canvas.width / 2 - square.size / 2;
-                }
-
-                // Update obstacle positions
-                obstacles.forEach(obstacle => {
-                    obstacle.y -= obstacleSpeed;
-
-                    // Check if obstacle has passed the square
-                    if (obstacle.y + obstacle.height < square.y && !obstacle.passed) {
-                        obstacle.passed = true;
-                        score++; // Increment score
-
-                        // Update high score if current score is higher
-                        const currentDifficulty = getCurrentDifficulty();
-                        if (score > highScores[currentDifficulty]) {
-                            highScores[currentDifficulty] = score;
-                            localStorage.setItem('highScores', JSON.stringify(highScores));
-                        }
-                    }
-                });
-
-                // Remove obstacles that are off-screen
-                obstacles = obstacles.filter(obstacle => obstacle.y + obstacle.height > 0);
-
-                // Check for collisions
-                obstacles.forEach(obstacle => {
-                    if (
-                        (square.x < obstacle.holeX &&
-                            square.x + square.size > 0 &&
-                            square.y < obstacle.y + obstacle.height &&
-                            square.y + square.size > obstacle.y) ||
-                        (square.x < canvas.width &&
-                            square.x + square.size > obstacle.holeX + obstacle.holeWidth &&
-                            square.y < obstacle.y + obstacle.height &&
-                            square.y + square.size > obstacle.y)
-                    ) {
-                        // Collision detected, stop the game
-                        gameOver = true;
-                    }
-                });
-
-                // Create new obstacles based on distance
-                if (obstacles.length === 0 || obstacles[obstacles.length - 1].y <= canvas.height - obstacleDistance) {
-                    obstacles.push(createObstacle());
-                }
-            }
-
-            if (gameOver) {
-                stopGame();
-            } else {
-                draw();
-                requestAnimationFrame(update);
-            }
+            // Ensure square stays within bounds of canvas horizontally
+            square.x = Math.max(0, Math.min(canvas.width - square.size, square.x));
         }
+
+        // Update obstacle positions
+        obstacles.forEach(obstacle => {
+            obstacle.y -= obstacleSpeed;
+
+            // Check if obstacle has passed the square
+            if (obstacle.y + obstacle.height < square.y && !obstacle.passed) {
+                obstacle.passed = true;
+                score++; // Increment score
+
+                // Update high score if current score is higher
+                const currentDifficulty = getCurrentDifficulty();
+                if (score > highScores[currentDifficulty]) {
+                    highScores[currentDifficulty] = score;
+                    localStorage.setItem('highScores', JSON.stringify(highScores));
+                }
+            }
+        });
+
+        // Remove obstacles that are off-screen
+        obstacles = obstacles.filter(obstacle => obstacle.y + obstacle.height > 0);
+
+        // Check for collisions
+        obstacles.forEach(obstacle => {
+            if (
+                (square.x < obstacle.holeX &&
+                    square.x + square.size > 0 &&
+                    square.y < obstacle.y + obstacle.height &&
+                    square.y + square.size > obstacle.y) ||
+                (square.x < canvas.width &&
+                    square.x + square.size > obstacle.holeX + obstacle.holeWidth &&
+                    square.y < obstacle.y + obstacle.height &&
+                    square.y + square.size > obstacle.y)
+            ) {
+                // Collision detected, stop the game
+                gameOver = true;
+            }
+        });
+
+        // Create new obstacles based on distance
+        if (obstacles.length === 0 || obstacles[obstacles.length - 1].y <= canvas.height - obstacleDistance) {
+            obstacles.push(createObstacle());
+        }
+    }
+
+    if (gameOver) {
+        stopGame();
+    } else {
+        draw();
+        requestAnimationFrame(update);
+    }
+}
 
         function stopGame() {
             canvas.style.display = 'none'; // Hide the canvas
@@ -296,10 +278,10 @@
         }
 
         function getCurrentDifficulty() {
-            if (obstacleSpeed === 2) return 'very_easy';
-            if (obstacleSpeed === 3) return 'easy';
-            if (obstacleSpeed === 4) return 'medium';
-            if (obstacleSpeed === 5) return 'hard';
+            if (obstacleSpeed === 4) return 'very_easy';
+            if (obstacleSpeed === 5) return 'easy';
+            if (obstacleSpeed === 6) return 'medium';
+            if (obstacleSpeed === 7) return 'hard';
             return 'medium';
         }
 
