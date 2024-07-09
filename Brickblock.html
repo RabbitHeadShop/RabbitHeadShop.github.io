@@ -120,7 +120,7 @@
 
         let square = { x: 0, y: 0, size: 50 };
         let obstacles = [];
-        const obstacleHeight = 50;
+        const obstacleHeight = 60;
         let touchX = null; // Only X-axis touch input, null initially
         let obstacleSpeed = 4;
         let gameOver = false;
@@ -145,7 +145,9 @@
 
         // Image for obstacle
         const obstacleImage = new Image();
-        obstacleImage.src = 'https://cdn.vectorstock.com/i/preview-1x/53/77/pixel-art-seamless-pattern-brick-texture-vector-30705377.jpg';
+obstacleImage.src = 'https://cdn.vectorstock.com/i/preview-1x/53/77/pixel-art-seamless-pattern-brick-texture-vector-30705377.jpg';
+obstacleImage.width = 300;
+obstacleImage.height = 300;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -159,26 +161,60 @@
         }
 
         function draw() {
-            context.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw the animated GIF instead of a filled rectangle
-            context.drawImage(squareImage, square.x, square.y, square.size, square.size);
+    context.drawImage(squareImage, square.x, square.y, square.size, square.size);
 
-            // Draw obstacles with image
-            obstacles.forEach(obstacle => {
-                context.drawImage(obstacleImage, 0, obstacle.y, obstacle.holeX, obstacle.height);
-                context.drawImage(obstacleImage, obstacle.holeX + obstacle.holeWidth, obstacle.y, canvas.width - (obstacle.holeX + obstacle.holeWidth), obstacle.height);
-            });
+    obstacles.forEach(obstacle => {
+        obstacles.forEach(obstacle => {
+    // Draw left part of obstacle with repeated brick texture
+    let leftPartWidth = obstacle.holeX;
+    while (leftPartWidth > 0) {
+        let widthToDraw = Math.min(leftPartWidth, obstacleImage.width);
+        context.drawImage(
+            obstacleImage,
+            0,
+            0,
+            widthToDraw,
+            obstacle.height,
+            obstacle.holeX - leftPartWidth,
+            obstacle.y,
+            widthToDraw,
+            obstacle.height
+        );
+        leftPartWidth -= widthToDraw;
+    }
 
-            if (gameOver) {
-                // Display score and high score on game over
-                context.fillStyle = 'white';
-                context.font = '20px Arial';
-                context.fillText(`Score: ${score}`, 10, 30);
-                const currentDifficulty = getCurrentDifficulty();
-                context.fillText(`High Score (${currentDifficulty}): ${highScores[currentDifficulty]}`, 10, 60);
-            }
-        }
+    // Draw right part of obstacle with repeated brick texture
+    let rightPartWidth = canvas.width - (obstacle.holeX + obstacle.holeWidth);
+    let rightX = obstacle.holeX + obstacle.holeWidth;
+    while (rightPartWidth > 0) {
+        let widthToDraw = Math.min(rightPartWidth, obstacleImage.width);
+        context.drawImage(
+            obstacleImage,
+            0,
+            0,
+            widthToDraw,
+            obstacle.height,
+            rightX,
+            obstacle.y,
+            widthToDraw,
+            obstacle.height
+        );
+        rightX += widthToDraw;
+        rightPartWidth -= widthToDraw;
+    }
+});
+    });
+
+    if (gameOver) {
+        context.fillStyle = 'white';
+        context.font = '20px Arial';
+        context.fillText(`Score: ${score}`, 10, 30);
+        const currentDifficulty = getCurrentDifficulty();
+        context.fillText(`High Score (${currentDifficulty}): ${highScores[currentDifficulty]}`, 10, 60);
+    }
+}
 
         function update() {
     if (gameStarted) {
