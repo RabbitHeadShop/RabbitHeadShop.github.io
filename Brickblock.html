@@ -57,7 +57,7 @@
             margin: 10px 0;
             cursor: pointer;
         }
-        .start-button, .game-over-buttons button {
+        .start-button, .game-over-buttons button, .fullscreen-button {
             background-color: #4CAF50;
         }
         .game-over-buttons {
@@ -99,6 +99,7 @@
             <button onclick="setDifficulty('easy')">Easy</button>
             <button onclick="setDifficulty('medium')">Medium</button>
             <button onclick="setDifficulty('hard')">Hard</button>
+            <button class="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
         </div>
         <button class="start-button" id="startButton" style="display: none;" onclick="startGame()">Start Game</button>
     </div>
@@ -110,6 +111,7 @@
         <p class="high-score" id="highScoreText"></p>
         <button onclick="restartGame()">Restart</button>
         <button onclick="backToDifficulty()">Home</button>
+        <button class="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
     </div>
 
     <script>
@@ -251,7 +253,7 @@
 
         function restartGame() {
             gameOver = false;
-            canvas.style.display = 'none'; // Hide the canvas
+            canvas.style.display = 'none'; //Hide the canvas
             document.getElementById('gameOverScreen').style.display = 'none';
             resetGame();
             score = 0; // Reset score
@@ -339,6 +341,17 @@
         canvas.addEventListener('touchend', function () {
             touchX = null; // Reset touch input when touch ends
         });
+
+        // Fullscreen functionality
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
 
         // Initial setup
         resizeCanvas();
