@@ -165,16 +165,45 @@
         // Image for obstacle
         const obstacleImage = new Image();
 obstacleImage.src = 'https://cdn.vectorstock.com/i/preview-1x/53/77/pixel-art-seamless-pattern-brick-texture-vector-30705377.jpg';
-obstacleImage.width = 300;
-obstacleImage.height = 300;
+obstacleImage.width = 50;
+obstacleImage.height = 50;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-
+// Function to handle key down events
+function handleKeyDown(event) {
+    if (event.key === 'ArrowLeft') {
+        // Move square left
+        square.x -= 10; // Adjust speed as needed
+    } else if (event.key === 'ArrowRight') {
+        // Move square right
+        square.x += 10; // Adjust speed as needed
+    }
+}
             // Center the square in the viewport
             square.x = canvas.width / 2 - square.size / 2;
             square.y = canvas.height / 2 - square.size / 2;
+          // Function to handle key down events
+function handleKeyDown(event) {
+    if (event.key === 'ArrowLeft') {
+        // Move square left
+        square.x -= 10; // Adjust speed as needed
+    } else if (event.key === 'ArrowRight') {
+        // Move square right
+        square.x += 10; // Adjust speed as needed
+    }
+}
+
+// Function to handle key up events (optional, if needed)
+function handleKeyUp(event) {
+    // You can handle key release events if needed
+}
+
+// Event listeners for keydown and keyup
+window.addEventListener('keydown', handleKeyDown);
+// Optionally, add keyup listener if needed
+// window.addEventListener('keyup', handleKeyUp);
 
             draw();
         }
@@ -186,43 +215,43 @@ obstacleImage.height = 300;
 
     obstacles.forEach(obstacle => {
         obstacles.forEach(obstacle => {
-    // Draw left part of obstacle with repeated brick texture
-    let leftPartWidth = obstacle.holeX;
-    while (leftPartWidth > 0) {
-        let widthToDraw = Math.min(leftPartWidth, obstacleImage.width);
-        context.drawImage(
-            obstacleImage,
-            0,
-            0,
-            widthToDraw,
-            obstacle.height,
-            obstacle.holeX - leftPartWidth,
-            obstacle.y,
-            widthToDraw,
-            obstacle.height
-        );
-        leftPartWidth -= widthToDraw;
-    }
+   // Draw left part of obstacle with repeated brick texture
+let leftPartWidth = obstacle.holeX;
+while (leftPartWidth > 0) {
+    let widthToDraw = Math.min(leftPartWidth, obstacleImage.width);
+    context.drawImage(
+        obstacleImage,
+        0,
+        0,
+        widthToDraw,
+        50,
+        obstacle.holeX - leftPartWidth,
+        obstacle.y,
+        widthToDraw,
+        50
+    );
+    leftPartWidth -= widthToDraw; // Adjust leftPartWidth by widthToDraw
+}
 
-    // Draw right part of obstacle with repeated brick texture
-    let rightPartWidth = canvas.width - (obstacle.holeX + obstacle.holeWidth);
-    let rightX = obstacle.holeX + obstacle.holeWidth;
-    while (rightPartWidth > 0) {
-        let widthToDraw = Math.min(rightPartWidth, obstacleImage.width);
-        context.drawImage(
-            obstacleImage,
-            0,
-            0,
-            widthToDraw,
-            obstacle.height,
-            rightX,
-            obstacle.y,
-            widthToDraw,
-            obstacle.height
-        );
-        rightX += widthToDraw;
-        rightPartWidth -= widthToDraw;
-    }
+// Draw right part of obstacle with repeated brick texture
+let rightPartWidth = canvas.width - (obstacle.holeX + obstacle.holeWidth);
+let rightX = obstacle.holeX + obstacle.holeWidth;
+while (rightPartWidth > 0) {
+    let widthToDraw = Math.min(rightPartWidth, obstacleImage.width);
+    context.drawImage(
+        obstacleImage,
+        0,
+        0,
+        widthToDraw,
+        50,
+        rightX,
+        obstacle.y,
+        widthToDraw,
+        50
+    );
+    rightX += widthToDraw; // Adjust rightX by widthToDraw
+    rightPartWidth -= widthToDraw;
+}
 });
     });
 
