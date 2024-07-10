@@ -113,7 +113,26 @@
         <button onclick="backToDifficulty()">Home</button>
         <button class="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
     </div>
-
+<!-- Audio element for playing the sound -->
+  <audio id="VeryEasySound">
+    <source src="https://github.com/RabbitHeadShop/RabbitHeadShop.github.io/raw/778c781e630b02b82c0cdd70e4c1e695386aadcf/easy-101soundboards.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+    <audio id="EasySound">
+        <source src="https://github.com/RabbitHeadShop/RabbitHeadShop.github.io/raw/778c781e630b02b82c0cdd70e4c1e695386aadcf/easy-101soundboards%20(1).mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+  <audio id= "GameMusic"><source src="https://github.com/RabbitHeadShop/RabbitHeadShop.github.io/raw/778c781e630b02b82c0cdd70e4c1e695386aadcf/retro-game-beat-8bit-140-bpm-video-game-game-beat-at-benderhover-101soundboards_1.mp3" type="audio/mpeg">
+    
+  </audio>
+  <audio id="MediumSound">
+    <source src="https://github.com/RabbitHeadShop/RabbitHeadShop.github.io/raw/778c781e630b02b82c0cdd70e4c1e695386aadcf/medium-101soundboards.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+  <audio id="HardSound">
+    <source src="https://github.com/RabbitHeadShop/RabbitHeadShop.github.io/raw/778c781e630b02b82c0cdd70e4c1e695386aadcf/hard-101soundboards.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const context = canvas.getContext('2d');
@@ -224,6 +243,7 @@ obstacleImage.height = 300;
 
             // Ensure square stays within bounds of canvas horizontally
             square.x = Math.max(0, Math.min(canvas.width - square.size, square.x));
+          document.getElementById('GameMusic').play();
         }
 
         // Update obstacle positions
@@ -272,6 +292,8 @@ obstacleImage.height = 300;
 
     if (gameOver) {
         stopGame();
+          GameMusic.pause();  // Pause the audio
+    GameMusic.currentTime = 0;  // Reset audio to the beginning
     } else {
         draw();
         requestAnimationFrame(update);
@@ -309,18 +331,26 @@ obstacleImage.height = 300;
                 case 'very_easy':
                     obstacleSpeed = 2;
                     obstacleDistance = 300; // Pixels between obstacles
+              document.getElementById('VeryEasySound').currentTime = 0;
+                    document.getElementById('VeryEasySound').play();
                     break;
                 case 'easy':
                     obstacleSpeed = 3;
                     obstacleDistance = 350;
+              document.getElementById('EasySound').currentTime = 0;
+                    document.getElementById('EasySound').play();
                     break;
                 case 'medium':
                     obstacleSpeed = 4;
                     obstacleDistance = 300;
+              document.getElementById('MediumSound').currentTime = 0;
+                    document.getElementById('MediumSound').play();
                     break;
                 case 'hard':
                     obstacleSpeed = 5;
                     obstacleDistance = 300;
+              document.getElementById('HardSound').currentTime = 0;
+                    document.getElementById('HardSound').play();
                     break;
                 default:
                     obstacleSpeed = 4;
