@@ -16,7 +16,7 @@
     <title>Brickblock</title>
     <style>
         body, html {
-            background-color: #000;
+            background-color: blue;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -28,7 +28,11 @@
             color: #00FF00;
             font-family: Arial, sans-serif;
         }
+body {
+  background-color: black; 
+}
         canvas {
+          background-color: black;
             display: none;
         }
         .button-container {
@@ -152,8 +156,8 @@
 <body>
   <div id="Stuff" class="StuffClass">
     <div id="RandomNumbers"></div>
-    <p id="1" style="margin-top: 5vh; font-size: 50px">xI5 bdITI, yQbb cQWWIb! 😋</p>
-    <p id="2" style="font-size: 30px; Word-Wrap: break-line">L YyoE 9yu'zE YtkDXn t nyy6 6t9 tX6 mYtm 9yu'kE EtmEX tX6 mYtm 9yu'zE syVb9 tX6 6yDXn 4yVEmYDXn 9yu QykE. HYtXT 9yu byz wEDXn 4usY t QykEQ9 oEz4yX. 🤍</p>
+    <p id="1" style="margin-top: 5vh; font-size: 50px">Hey there, Butt Nugget! 😋</p>
+    <p id="2" style="font-size: 30px; Word-Wrap: break-line">I hope you're having a good day and that you've eaten and that you're comfy and doing something you love. Thank you for being such a lovely person. 🤍</p>
   </div>
     <div id="HomeScreen"class="button-container">
         <div class="difficulty-buttons">
@@ -468,26 +472,26 @@ document.getElementById('gameOverScreen').style.display = 'none';
         function setDifficulty(difficulty) {
             switch (difficulty) {
                 case 'very_easy':
-                    BrickSpeed = 3;
+                    BrickSpeed = 2;
                     BrickDistance = 300; // Pixels between Bricka
 document.getElementById('VeryEasySound').currentTime = 0;
                     document.getElementById('VeryEasySound').play();
                     break;
                 case 'easy':
-                    BrickSpeed = 4;
+                    BrickSpeed = 2;
                     BrickDistance = 350;
               document.getElementById('EasySound').currentTime = 0;
                     document.getElementById('EasySound').play();
                     break;
                 case 'medium':
-                    BrickSpeed = 5;
+                    BrickSpeed = 3;
                     BrickDistance = 300;
               document.getElementById('MediumSound').currentTime = 0;
                     document.getElementById('MediumSound').play();
                     break;
                 case 'hard':
-                    BrickSpeed = 7;
-                    BrickDistance = 250;
+                    BrickSpeed = 4;
+                    BrickDistance = 300;
               document.getElementById('HardSound').currentTime = 0;
                     document.getElementById('HardSound').play();
                     break;
@@ -499,10 +503,10 @@ document.getElementById('VeryEasySound').currentTime = 0;
         }
 
         function getCurrentDifficulty() {
-            if (BrickSpeed === 3) return 'very_easy';
-            if (BrickSpeed === 4) return 'easy';
-            if (BrickSpeed === 5) return 'medium';
-            if (BrickSpeed === 6) return 'hard';
+            if (BrickSpeed === 2) return 'very_easy';
+            if (BrickSpeed === 3) return 'easy';
+            if (BrickSpeed === 4) return 'medium';
+            if (BrickSpeed === 5) return 'hard';
             return 'medium';
         }
 
@@ -668,32 +672,5 @@ function handleNumberClick(number) {
     square.style.left = `${newX}px`;
 }
     </script>
-
-        <script>
-          function decryptWithMapping(str, mapping) {
-            let reverseMapping = {};
-            for (let key in mapping) {
-              reverseMapping[mapping[key]] = key;
-            }
-            let decrypted = '';
-            for (let char of str) {
-              decrypted += reverseMapping[char] || char;
-            }
-            return decrypted;
-          }
-
-          document.addEventListener('DOMContentLoaded', (event) => {
-            var mappings = {"1":{"0":"i","1":"K","2":"h","3":"L","4":"0","5":"q","6":"e","7":"j","8":"s","9":"w","A":"E","B":"y","C":"o","D":"z","E":"B","F":"l","G":"1","H":"x","I":"v","J":"X","K":"Z","L":"R","M":"p","N":"c","O":"Y","P":"m","Q":"n","R":"3","S":"F","T":"k","U":"O","V":"H","W":"A","X":"r","Y":"S","Z":"9","a":"D","b":"N","c":"f","d":"V","e":"I","f":"a","g":"W","h":"d","i":"G","j":"u","k":"U","l":"t","m":"8","n":"7","o":"P","p":"J","q":"g","r":"T","s":"M","t":"b","u":"Q","v":"4","w":"6","x":"2","y":"5","z":"C"},"2":{"0":"B","1":"U","2":"5","3":"S","4":"3","5":"v","6":"A","7":"p","8":"r","9":"a","A":"O","B":"2","C":"N","D":"W","E":"e","F":"h","G":"M","H":"x","I":"L","J":"P","K":"K","L":"J","M":"c","N":"R","O":"Z","P":"I","Q":"1","R":"g","S":"q","T":"H","U":"7","V":"l","W":"0","X":"i","Y":"G","Z":"F","a":"t","b":"w","c":"s","d":"6","e":"E","f":"b","g":"n","h":"Y","i":"D","j":"C","k":"T","l":"Q","m":"V","n":"X","o":"y","p":"o","q":"d","r":"z","s":"4","t":"m","u":"u","v":"k","w":"8","x":"j","y":"9","z":"f"}};
-            var tags = ["1","2"];
-            tags.forEach(tag => {
-              var elements = document.querySelectorAll('[id="' + tag + '"]');
-              elements.forEach(element => {
-                var encryptedContent = element.innerHTML;
-                var mapping = mappings[tag];
-                element.innerHTML = decryptWithMapping(encryptedContent, mapping);
-              });
-            });
-          });
-        </script>
-      </body>
+</body>
 </html>
