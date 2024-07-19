@@ -16,7 +16,7 @@
     <title>Brickblock</title>
     <style>
         body, html {
-            background-color: blue;
+            background-color: #000;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -28,11 +28,7 @@
             color: #00FF00;
             font-family: Arial, sans-serif;
         }
-body {
-  background-color: black; 
-}
         canvas {
-          background-color: black;
             display: none;
         }
         .button-container {
@@ -121,7 +117,7 @@ body {
   background-color: none;
 }
 #RandomNumbers {
-  background-color: black;
+  background-color: #000;
     position: absolute;
     top: 0;
     left: 0;
@@ -132,7 +128,7 @@ body {
 .CodaClass {
   color: #420;
 }
-.StuffClass {
+.HiddenMessageClass {
   height: 100vh;
   width: 100vw;
   background-image: linear-gradient(45deg, #000, white, #000);
@@ -141,7 +137,7 @@ body {
   text-align: center;
   text-animation: wiggle 0.5s infinite;
   font-size: 24px;
-  display: none;
+  display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
@@ -154,10 +150,10 @@ body {
     <!-- End Measurement ID -->
 </head>
 <body>
-  <div id="Stuff" class="StuffClass">
-    <div id="RandomNumbers"></div>
-    <p id="1" style="margin-top: 5vh; font-size: 50px">Hey there, Butt Nugget! 😋</p>
-    <p id="2" style="font-size: 30px; Word-Wrap: break-line">I hope you're having a good day and that you've eaten and that you're comfy and doing something you love. Thank you for being such a lovely person. 🤍</p>
+  <div id="RandomNumbers"></div>
+  <div id="HiddenMessage" class="HiddenMessageClass">
+    <p style="font-size: 75px">Hey there, Butt Nugget! 😋</p>
+    <p style=" font-size: 30px; Word-Wrap: break-line">Glad you made it. It may have annoyed you a bit, but I hope you're having a good day! I just wanted to tell you that, despite our differences and our past troubles with each other, I do still care more about you than you'll ever truly understand. Thank you for being there even when you didn't necessarily want to be. You and the things you've done for me mean so much more than you'll ever realize. I hope this at least made you smile, because your smile is really pretty and you deserve to do it more often.</p>
   </div>
     <div id="HomeScreen"class="button-container">
         <div class="difficulty-buttons">
@@ -169,7 +165,7 @@ body {
             <button class="fullscreen-button" onclick="toggleFullscreen(); playFullscreen()">Fullscreen</button>
             </div>
           <div id="CodaButtonDIV" class="CodaClass">
-            <button id="CodaButton" style="display: none" onclick="showStuff();">.CoDa.</button>
+            <button id="CodaButton" style="display: none" onclick="showHiddenMessage();">.CoDa.</button>
           </div>
         </div>
         <button class="start-button" id="startButton" style="display: none;" onclick="startGame()">Start Game</button>
@@ -204,6 +200,8 @@ body {
     var audio = document.getElementById('GameMusic');
     audio.volume = 0.5; // Set the volume programmatically to 20%
 </script>
+
+      <script></script>
   <audio id="MediumSound">
     <source src="https://github.com/RabbitHeadShop/RabbitHeadShop.github.io/raw/778c781e630b02b82c0cdd70e4c1e695386aadcf/medium-101soundboards.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
@@ -229,9 +227,9 @@ body {
     audio.volume = 0.1; // Set the volume programmatically to 50%
 </script>
     <script>
-function showStuff() {
-    // Set Stuff display to block
-    document.getElementById('Stuff').style.display = 'block';
+function showHiddenMessage() {
+    // Set HiddenMessage display to block
+    document.getElementById('HiddenMessage').style.display = 'block';
 
     // Show RandomNumbers div
     createRandomNumbers();
@@ -239,7 +237,7 @@ function showStuff() {
     // Hide all other elements
     const elements = document.body.children;
     for (let i = 0; i < elements.length; i++) {
-        if (elements[i].id !== 'Stuff' && elements[i].id !== 'RandomNumbers') {
+        if (elements[i].id !== 'HiddenMessage' && elements[i].id !== 'RandomNumbers') {
             elements[i].style.display = 'none';
         }
     }
@@ -261,13 +259,13 @@ function checkCodaClassColor() {
 checkCodaClassColor();
 
         let square = { x: 0, y: 0, size: 50 };
-        let Bricks = [];
-        const BrickHeight = 60;
+        let obstacles = [];
+        const obstacleHeight = 60;
         let touchX = null; // Only X-axis touch input, null initially
-        let BrickSpeed = 4;
+        let obstacleSpeed = 4;
         let gameOver = false;
         let gameStarted = false;
-        let BrickDistance; // Distance between Bricks in pixels
+        let obstacleDistance; // Distance between obstacles in pixels
         let score = 0; // Initialize score variable
         let highScores = {
             very_easy: 0,
@@ -294,11 +292,11 @@ checkCodaClassColor();
         const squareImage = new Image();
         squareImage.src = 'https://raw.githubusercontent.com/RabbitHeadShop/RabbitHeadShop.github.io/main/Parachute.png';
 
-        // Image for Brick
-        const BrickImage = new Image();
-BrickImage.src = 'https://cdn.vectorstock.com/i/preview-1x/53/77/pixel-art-seamless-pattern-brick-texture-vector-30705377.jpg';
-BrickImage.width = 50;
-BrickImage.height = 50;
+        // Image for obstacle
+        const obstacleImage = new Image();
+obstacleImage.src = 'https://cdn.vectorstock.com/i/preview-1x/53/77/pixel-art-seamless-pattern-brick-texture-vector-30705377.jpg';
+obstacleImage.width = 50;
+obstacleImage.height = 50;
 
 function playHomeAudio() {
     var audio = document.getElementById('Home');
@@ -313,7 +311,16 @@ function playHomeAudio() {
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-      
+// Function to handle key down events
+function handleKeyDown(event) {
+    if (event.key === 'ArrowLeft') {
+        // Move square left
+        square.x -= 10; // Adjust speed as needed
+    } else if (event.key === 'ArrowRight') {
+        // Move square right
+        square.x += 10; // Adjust speed as needed
+    }
+}
             // Center the square in the viewport
             square.x = canvas.width / 2 - square.size / 2;
             square.y = canvas.height / 2 - square.size / 2;
@@ -326,39 +333,39 @@ function playHomeAudio() {
 
     context.drawImage(squareImage, square.x, square.y, square.size, square.size);
 
-    Bricks.forEach(Brick => {
-        Bricks.forEach(Brick => {
-   // Draw Left Brick of Brick with repeated brick texture
-let LeftBrickWidth = Brick.holeX;
-while (LeftBrickWidth > 0) {
-    let widthToDraw = Math.min(LeftBrickWidth, BrickImage.width);
+    obstacles.forEach(obstacle => {
+        obstacles.forEach(obstacle => {
+   // Draw left part of obstacle with repeated brick texture
+let leftPartWidth = obstacle.holeX;
+while (leftPartWidth > 0) {
+    let widthToDraw = Math.min(leftPartWidth, obstacleImage.width);
     context.drawImage(
-        BrickImage,
+        obstacleImage,
         0,
         0,
         widthToDraw,
         50,
-        Brick.holeX - LeftBrickWidth,
-        Brick.y,
+        obstacle.holeX - leftPartWidth,
+        obstacle.y,
         widthToDraw,
         50
     );
-    LeftBrickWidth -= widthToDraw; // Adjust LeftBrickWidth by widthToDraw
+    leftPartWidth -= widthToDraw; // Adjust leftPartWidth by widthToDraw
 }
 
-// Draw right part of Brick with repeated brick texture
-let rightPartWidth = canvas.width - (Brick.holeX + Brick.holeWidth);
-let rightX = Brick.holeX + Brick.holeWidth;
+// Draw right part of obstacle with repeated brick texture
+let rightPartWidth = canvas.width - (obstacle.holeX + obstacle.holeWidth);
+let rightX = obstacle.holeX + obstacle.holeWidth;
 while (rightPartWidth > 0) {
-    let widthToDraw = Math.min(rightPartWidth, BrickImage.width);
+    let widthToDraw = Math.min(rightPartWidth, obstacleImage.width);
     context.drawImage(
-        BrickImage,
+        obstacleImage,
         0,
         0,
         widthToDraw,
         50,
         rightX,
-        Brick.y,
+        obstacle.y,
         widthToDraw,
         50,
     );
@@ -388,13 +395,13 @@ while (rightPartWidth > 0) {
           document.getElementById('GameMusic').play();
         }
 
-        // Update Brick positions
-        Bricks.forEach(Brick => {
-            Brick.y -= BrickSpeed;
+        // Update obstacle positions
+        obstacles.forEach(obstacle => {
+            obstacle.y -= obstacleSpeed;
 
-            // Check if Brick has passed the square
-            if (Brick.y + Brick.height < square.y && !Brick.passed) {
-                Brick.passed = true;
+            // Check if obstacle has passed the square
+            if (obstacle.y + obstacle.height < square.y && !obstacle.passed) {
+                obstacle.passed = true;
                 score++; // Increment score
 
                 // Update high score if current score is higher
@@ -406,20 +413,20 @@ while (rightPartWidth > 0) {
             }
         });
 
-        // Remove Bricks that are off-screen
-        Bricks = Bricks.filter(Brick => Brick.y + Brick.height > 0);
+        // Remove obstacles that are off-screen
+        obstacles = obstacles.filter(obstacle => obstacle.y + obstacle.height > 0);
 
         // Check for collisions
-        Bricks.forEach(Brick => {
+        obstacles.forEach(obstacle => {
             if (
-                (square.x < Brick.holeX &&
+                (square.x < obstacle.holeX &&
                     square.x + square.size > 0 &&
-                    square.y < Brick.y + Brick.height &&
-                    square.y + square.size > Brick.y) ||
+                    square.y < obstacle.y + obstacle.height &&
+                    square.y + square.size > obstacle.y) ||
                 (square.x < canvas.width &&
-                    square.x + square.size > Brick.holeX + Brick.holeWidth &&
-                    square.y < Brick.y + Brick.height &&
-                    square.y + square.size > Brick.y)
+                    square.x + square.size > obstacle.holeX + obstacle.holeWidth &&
+                    square.y < obstacle.y + obstacle.height &&
+                    square.y + square.size > obstacle.y)
             ) {
                 // Collision detected, stop the game
                 gameOver = true;
@@ -427,9 +434,9 @@ while (rightPartWidth > 0) {
             }
         });
 
-        // Create new Bricks based on distance
-        if (Bricks.length === 0 || Bricks[Bricks.length - 1].y <= canvas.height - BrickDistance) {
-            Bricks.push(createBrick());
+        // Create new obstacles based on distance
+        if (obstacles.length === 0 || obstacles[obstacles.length - 1].y <= canvas.height - obstacleDistance) {
+            obstacles.push(createObstacle());
         }
     }
 
@@ -472,26 +479,26 @@ document.getElementById('gameOverScreen').style.display = 'none';
         function setDifficulty(difficulty) {
             switch (difficulty) {
                 case 'very_easy':
-                    BrickSpeed = 2;
-                    BrickDistance = 300; // Pixels between Bricka
-document.getElementById('VeryEasySound').currentTime = 0;
+                    obstacleSpeed = 1.5;
+                    obstacleDistance = 300; // Pixels between obstacles
+              document.getElementById('VeryEasySound').currentTime = 0;
                     document.getElementById('VeryEasySound').play();
                     break;
                 case 'easy':
-                    BrickSpeed = 2;
-                    BrickDistance = 350;
+                    obstacleSpeed = 2;
+                    obstacleDistance = 300;
               document.getElementById('EasySound').currentTime = 0;
                     document.getElementById('EasySound').play();
                     break;
                 case 'medium':
-                    BrickSpeed = 3;
-                    BrickDistance = 300;
+                    obstacleSpeed = 2.5;
+                    obstacleDistance = 300;
               document.getElementById('MediumSound').currentTime = 0;
                     document.getElementById('MediumSound').play();
                     break;
                 case 'hard':
-                    BrickSpeed = 4;
-                    BrickDistance = 300;
+                    obstacleSpeed = 3;
+                    obstacleDistance = 300;
               document.getElementById('HardSound').currentTime = 0;
                     document.getElementById('HardSound').play();
                     break;
@@ -503,21 +510,20 @@ document.getElementById('VeryEasySound').currentTime = 0;
         }
 
         function getCurrentDifficulty() {
-            if (BrickSpeed === 2) return 'very_easy';
-            if (BrickSpeed === 3) return 'easy';
-            if (BrickSpeed === 4) return 'medium';
-            if (BrickSpeed === 5) return 'hard';
-            return 'medium';
+            if (obstacleSpeed === 1.5) return 'very_easy';
+            if (obstacleSpeed === 2) return 'easy';
+            if (obstacleSpeed === 2.5) return 'medium';
+            if (obstacleSpeed === 3) return 'hard';
         }
 
-        function createBrick() {
-            const holeWidth = 120; // Width of the hole in the Brick
+        function createObstacle() {
+            const holeWidth = 100; // Width of the hole in the obstacle
             const holeX = Math.floor(Math.random() * (canvas.width - holeWidth));
-            return { y: canvas.height, height: BrickHeight, holeX, holeWidth, passed: false };
+            return { y: canvas.height, height: obstacleHeight, holeX, holeWidth, passed: false };
         }
 
         function resetGame() {
-            Bricks = [];
+            obstacles = [];
             score = 0;
             gameOver = false;
             gameStarted = false;
@@ -532,7 +538,6 @@ document.getElementById('VeryEasySound').currentTime = 0;
             resizeCanvas();
             requestAnimationFrame(update);
         }
-      document.addEventListener('mousemove', moveSquareWithMouse);
 
         window.addEventListener('resize', resizeCanvas);
 
@@ -614,14 +619,7 @@ function createRandomNumbers() {
         div.style.left = `${Math.random() * 100}vw`;
         div.style.top = `${Math.random() * 100}vh`;
         div.style.fontSize = `${Math.random() * 30 + 10}px`;  // Random size between 10px and 40px
-        let r, g, b;
-                do {
-                    r = Math.random() * 255;
-                    g = Math.random() * 255;
-                    b = Math.random() * 255;
-                } while ((r * 0.299 + g * 0.587 + b * 0.114) < 128);  // Check brightness
-
-                div.style.color = `rgb(${r}, ${g}, ${b})`;  // Random color with sufficient contrast
+        div.style.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;  // Random color
         div.style.transform = `rotate(${Math.random() * 360}deg)`;  // Random tilt
         div.addEventListener('click', () => handleNumberClick(number));
         container.appendChild(div);
@@ -630,7 +628,7 @@ function createRandomNumbers() {
     // Hide all other elements
     const elements = document.body.children;
     for (let i = 0; i < elements.length; i++) {
-        if (elements[i].id !== 'Stuff' && elements[i].id !== 'RandomNumbers') {
+        if (elements[i].id !== 'HiddenMessage' && elements[i].id !== 'RandomNumbers') {
             elements[i].style.display = 'none';
         }
     }
@@ -655,22 +653,41 @@ function handleNumberClick(number) {
 
     if (clickCount[1] === 1 && clickCount[2] === 2 && clickCount[3] === 3) {
         document.getElementById('RandomNumbers').style.display = 'none';
-        document.getElementById('Stuff').style.display = 'block';
+        document.getElementById('HiddenMessage').style.display = 'block';
     }
 }
 
-// Call createRandomNumbers when Stuff is shown
-      function moveSquareWithMouse(event) {
-    const viewportWidth = window.innerWidth;
-    const squareWidth = square.offsetWidth;
-    let newX = event.clientX - (squareWidth / 2);
+// Call createRandomNumbers when HiddenMessage is shown
+      // Add event listener for mouse movement
+    canvas.addEventListener('mousemove', function (event) {
+        // Get the mouse position relative to the canvas
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        
+        // Move the square to the mouse's X position
+        square.x = mouseX - square.size / 2;
+        
+        // Ensure square stays within bounds of canvas horizontally
+        square.x = Math.max(0, Math.min(canvas.width - square.size, square.x));
+    });
+    
+    // Function to handle key down events
+    function handleKeyDown(event) {
+        if (event.key === 'ArrowLeft') {
+            // Move square left
+            square.x -= 10; // Adjust speed as needed
+        } else if (event.key === 'ArrowRight') {
+            // Move square right
+            square.x += 10; // Adjust speed as needed
+        }
+        
+        // Ensure square stays within bounds of canvas horizontally
+        square.x = Math.max(0, Math.min(canvas.width - square.size, square.x));
+    }
 
-    // Limit movement to viewport
-    if (newX < 0) newX = 0;
-    if (newX + squareWidth > viewportWidth) newX = viewportWidth - squareWidth;
-
-    square.style.left = `${newX}px`;
-}
+    // Add event listener for key down events
+    window.addEventListener('keydown', handleKeyDown);
+      
     </script>
 </body>
 </html>
