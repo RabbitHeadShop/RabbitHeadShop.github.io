@@ -29,9 +29,11 @@
             font-family: Arial, sans-serif;
         }
         canvas {
+          background-color: black;
             display: none;
         }
-        .button-container {
+        .Homescreen {
+          background-color: black;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -43,7 +45,7 @@
             margin-bottom: 20px;
           justify-content: center
         }
-        .button-container button {
+        .Homescreen button {
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -152,10 +154,10 @@
 <body>
   <div id="RandomNumbers"></div>
   <div id="HiddenMessage" class="HiddenMessageClass">
-    <p style="font-size: 75px">Hey there, Butt Nugget! 😋</p>
+    <p style="font-size: 50px">Hey there, Butt Nugget! 😋</p>
     <p style=" font-size: 30px; Word-Wrap: break-line">Glad you made it. It may have annoyed you a bit, but I hope you're having a good day! I just wanted to tell you that, despite our differences and our past troubles with each other, I do still care more about you than you'll ever truly understand. Thank you for being there even when you didn't necessarily want to be. You and the things you've done for me mean so much more than you'll ever realize. I hope this at least made you smile, because your smile is really pretty and you deserve to do it more often.</p>
   </div>
-    <div id="HomeScreen"class="button-container">
+    <div id="HomeScreen"class="Homescreen" style="width: 100vw; height: 100vh;">
         <div class="difficulty-buttons">
             <button onclick="setDifficulty('very_easy')">Very Easy</button>
             <button onclick="setDifficulty('easy')">Easy</button>
@@ -478,26 +480,26 @@ document.getElementById('gameOverScreen').style.display = 'none';
 
         function setDifficulty(difficulty) {
             switch (difficulty) {
-                case 'very_easy':
-                    obstacleSpeed = 1.5;
+                case 'very easy':
+                    obstacleSpeed = 2.5;
                     obstacleDistance = 300; // Pixels between obstacles
               document.getElementById('VeryEasySound').currentTime = 0;
                     document.getElementById('VeryEasySound').play();
                     break;
                 case 'easy':
-                    obstacleSpeed = 2;
-                    obstacleDistance = 300;
+                    obstacleSpeed = 3;
+                    obstacleDistance = 350;
               document.getElementById('EasySound').currentTime = 0;
                     document.getElementById('EasySound').play();
                     break;
                 case 'medium':
-                    obstacleSpeed = 2.5;
+                    obstacleSpeed = 3.5;
                     obstacleDistance = 300;
               document.getElementById('MediumSound').currentTime = 0;
                     document.getElementById('MediumSound').play();
                     break;
                 case 'hard':
-                    obstacleSpeed = 3;
+                    obstacleSpeed = 4;
                     obstacleDistance = 300;
               document.getElementById('HardSound').currentTime = 0;
                     document.getElementById('HardSound').play();
@@ -510,10 +512,10 @@ document.getElementById('gameOverScreen').style.display = 'none';
         }
 
         function getCurrentDifficulty() {
-            if (obstacleSpeed === 1.5) return 'very_easy';
-            if (obstacleSpeed === 2) return 'easy';
-            if (obstacleSpeed === 2.5) return 'medium';
-            if (obstacleSpeed === 3) return 'hard';
+            if (obstacleSpeed === 2.5) return 'very_easy';
+            if (obstacleSpeed === 3) return 'easy';
+            if (obstacleSpeed === 3.5) return 'medium';
+            if (obstacleSpeed === 4) return 'hard';
         }
 
         function createObstacle() {
@@ -583,7 +585,7 @@ function playFullscreen() {
         if (document.fullscreenElement) {
             fullscreenButton.disabled = true;
             fullscreenButton.style.visibility = 'hidden';
-              element.classList.add('button-container');
+              element.classList.add('Homescreen');
 
             // Hide fullscreen button on game over screen
             const gameOverFullscreenButton = document.querySelector('.game-over-buttons .fullscreen-button');
@@ -594,7 +596,7 @@ function playFullscreen() {
         } else {
             fullscreenButton.disabled = false;
             fullscreenButton.style.visibility = 'visible';
-                element.classList.add('button-container2');
+                element.classList.add('Homescreen2');
             // Show fullscreen button on game over screen
             const gameOverFullscreenButton = document.querySelector('.game-over-buttons .fullscreen-button');
             if (gameOverFullscreenButton) {
@@ -687,7 +689,6 @@ function handleNumberClick(number) {
 
     // Add event listener for key down events
     window.addEventListener('keydown', handleKeyDown);
-      
     </script>
 </body>
 </html>
